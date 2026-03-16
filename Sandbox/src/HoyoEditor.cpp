@@ -1,5 +1,5 @@
 #include "EditorLayer.h"
-#include "core/EntryPoint.h"
+#include "Core/EntryPoint.h"
 
 namespace HALIBUT
 {
