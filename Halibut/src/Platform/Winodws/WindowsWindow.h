@@ -25,7 +25,7 @@ namespace HALIBUT
 
     private:
         virtual void Init(const WindowProps& props);
-		virtual void Shutdown();
+		virtual void Shutdown() override;
     private:
         struct WindowData
 		{

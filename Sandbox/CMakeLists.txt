@@ -12,7 +12,27 @@ PRIVATE
   "${Sandbox_SOURCES}"
 )
 
-find_program(SLANGC_EXECUTABLE NAMES slangc REQUIRED)
+find_program(SLANGC_EXECUTABLE
+  NAMES slangc
+  HINTS
+    "$ENV{VULKAN_SDK}/Bin"
+    "$ENV{VULKAN_SDK}/bin"
+    "$ENV{HOME}/tools/slang/bin"
+    "/opt/shader-slang-bin/bin"
+    "/opt/shader-slang/bin"
+)
+
+if(NOT SLANGC_EXECUTABLE)
+  message(FATAL_ERROR
+    "Could not find slangc. "
+    "Try one of:\n"
+    "  1) install shader-slang-bin\n"
+    "  2) pass -DSLANGC_EXECUTABLE=/absolute/path/to/slangc\n"
+    "  3) add slangc directory to PATH"
+  )
+endif()
+
+message(STATUS "Using slangc: ${SLANGC_EXECUTABLE}")
 
 set(Sandbox_SHADER_SOURCE "${CMAKE_CURRENT_LIST_DIR}/assets/shaders/BasicShader.slang")
 set(Sandbox_SHADER_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/shaders")
