@@ -4,16 +4,24 @@
 #include <memory>
 #include <utility>
 
-#ifdef HALIBUT_PLATFORM_WINDOWS
-    #ifdef HALIBUT_STATIC_LIB
-        #define HALIBUT_API
-    #elif defined(HALIBUT_BUILD_DLL)
-        #define HALIBUT_API __declspec(dllexport)
+#if defined(_WIN32)
+  #if defined(HALIBUT_SHARED_LIB)
+    #if defined(HALIBUT_BUILD_DLL)
+      #define HALIBUT_API __declspec(dllexport)
     #else
-        #define HALIBUT_API __declspec(dllimport)
+      #define HALIBUT_API __declspec(dllimport)
     #endif
-#else
+  #else
     #define HALIBUT_API
+  #endif
+#elif defined(__GNUC__) || defined(__clang__)
+  #if defined(HALIBUT_SHARED_LIB) && defined(HALIBUT_BUILD_DLL)
+    #define HALIBUT_API __attribute__((visibility("default")))
+  #else
+    #define HALIBUT_API
+  #endif
+#else
+  #define HALIBUT_API
 #endif
 
 #define BIT(x) (1 << x)
