@@ -72,7 +72,14 @@ namespace HALIBUT
         }
 
 		m_SwapChain = vk::raii::SwapchainKHR(m_Device.GetDevice(), swapChainCreateInfo);
-        m_SwapChainImages = m_SwapChain.getImages();
+        auto images = m_SwapChain.getImages();
+        m_SwapChainImages.clear();
+        m_SwapChainImages.reserve(images.size());
+        for (auto image : images)
+        {
+            m_SwapChainImages.emplace_back(image);
+        }
+        //m_SwapChainImages = m_SwapChain.getImages();
 
         assert(m_SwapChainImageViews.empty());
 
