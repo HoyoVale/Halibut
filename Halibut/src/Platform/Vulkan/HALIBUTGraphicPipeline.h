@@ -9,6 +9,6 @@ namespace HALIBUT
     public:
         inline vk::raii::Pipeline& GetPipeline() { return m_GraphicsPipeline; }
     private:
-        vk::raii::Pipeline       m_GraphicsPipeline = nullptr;
+        vk::raii::Pipeline m_GraphicsPipeline = nullptr;
     };
 }
