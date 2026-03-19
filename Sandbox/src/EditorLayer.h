@@ -1,11 +1,6 @@
 #pragma once
-
 #include "Halibut.h"
-#include <cstdint>
-#include <deque>
-#include <string>
-#include <vector>
-
+#include <glm/glm.hpp>
 namespace HALIBUT
 {
 class EditorLayer : public HALIBUT::Layer
@@ -21,6 +16,7 @@ public:
     void OnSwapchainRecreated(HALIBUTDevice& device, HALIBUTSwapchain& swapchain, HALIBUTRenderer& renderer) override;
 
 private:
-  
+    HALIBUTRenderer* m_Renderer = nullptr;
+    glm::vec4 m_ClearColor = {0.1f,0.1f,0.1f,1.0f};
 };
 }

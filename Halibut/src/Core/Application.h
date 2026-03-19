@@ -9,7 +9,7 @@
 namespace HALIBUT
 {
     class ApplicationRenderContext;
-    class ApplicationImGuiContext;
+    //class ApplicationImGuiContext;
 
     class HALIBUT_API Application
     {
@@ -29,6 +29,9 @@ namespace HALIBUT
         inline static Application* Get() { return s_App; }
         inline Window* GetWindow() { return m_Window.get(); }
         inline const Window* GetWindow() const { return m_Window.get(); }
+        inline HALIBUTDevice& GetDevice() { return m_RenderContext->GetDevice(); }
+        inline HALIBUTSwapchain& GetSwapchain() { return m_RenderContext->GetSwapchain(); }
+        inline HALIBUTRenderer& GetRenderer() { return m_RenderContext->GetRenderer(); }
         inline void RequestClose() { m_Running = false; }
 
     private:

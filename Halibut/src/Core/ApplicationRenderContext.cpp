@@ -27,10 +27,10 @@ namespace HALIBUT
     {
         WaitForValidFramebufferSize();
         WaitIdle();
-        // if (m_Renderer != nullptr)
-        // {
-        //     m_ClearColor = m_Renderer->GetClearColor();
-        // }
+        if (m_Renderer != nullptr)
+        {
+            m_ClearColor = m_Renderer->GetClearColor();
+        }
         DestroySwapchainResources();
         CreateSwapchainResources();
         // if (m_Camera != nullptr)
@@ -57,13 +57,13 @@ namespace HALIBUT
     void ApplicationRenderContext::CreateSwapchainResources()
     {
         m_Swapchain = MakeUPtr<HALIBUTSwapchain>(*m_Device, *m_Surface, m_Window);
-        // m_Renderer = MakeUPtr<HALIBUTRenderer>(*m_Device, *m_Swapchain);
-        // m_Renderer->SetClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
+        m_Renderer = MakeUPtr<HALIBUTRenderer>(*m_Device, *m_Swapchain);
+        m_Renderer->SetClearColor(m_ClearColor);
     }
 
     void ApplicationRenderContext::DestroySwapchainResources()
     {
-        // m_Renderer.reset();
+        m_Renderer.reset();
         m_Swapchain.reset();
     }
 }

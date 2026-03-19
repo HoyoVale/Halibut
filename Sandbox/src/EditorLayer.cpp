@@ -22,6 +22,8 @@ void EditorLayer::OnAttach()
     {
         throw std::runtime_error("EditorLayer requires a valid Application instance");
     }
+    m_Renderer = &app->GetRenderer();
+    m_Renderer->SetClearColor(m_ClearColor);
 }
 
 void EditorLayer::OnDetach()
@@ -31,6 +33,8 @@ void EditorLayer::OnDetach()
 
 void EditorLayer::OnUpdate(HALIBUT::Timestep ts)
 {
+    m_Renderer->BeginSwapchainPass();
+    m_Renderer->EndSwapchainPass();
 }
 
 void EditorLayer::OnImGuiRender()
@@ -42,5 +46,7 @@ void EditorLayer::OnSwapchainRecreated(HALIBUTDevice& device, HALIBUTSwapchain& 
 {
     (void)device;
     (void)swapchain;
+    m_Renderer = &renderer;
+    m_Renderer->SetClearColor(m_ClearColor);
 }
 }

@@ -34,10 +34,10 @@ namespace HALIBUT
 
     Application::~Application()
     {
-        // if (m_RenderContext != nullptr)
-        // {
-        //     m_RenderContext->WaitIdle();
-        // }
+        if (m_RenderContext != nullptr)
+        {
+            m_RenderContext->WaitIdle();
+        }
 
         // if (m_ImGuiEnabled && m_ImGuiContext != nullptr)
         // {
@@ -76,13 +76,13 @@ namespace HALIBUT
                 continue;
             }
 
-            // HALIBUTRenderer& renderer = m_RenderContext->GetRenderer();
-            // renderer.BeginFrame();
-            // if (renderer.IsNeedRecreationSwapchain())
-            // {
-            //     m_PendingSwapchainRecreate = true;
-            //     continue;
-            // }
+            HALIBUTRenderer& renderer = m_RenderContext->GetRenderer();
+            renderer.BeginFrame();
+            if (renderer.IsNeedRecreationSwapchain())
+            {
+                m_PendingSwapchainRecreate = true;
+                continue;
+            }
 
             for (const UPtr<Layer>& layer : m_LayerStack)
             {
@@ -107,11 +107,11 @@ namespace HALIBUT
             //     renderer.ExecuteRenderGraph(renderGraph);
             // }
 
-            // renderer.EndFrame();
-            // if (renderer.IsNeedRecreationSwapchain())
-            // {
-            //     m_PendingSwapchainRecreate = true;
-            // }
+            renderer.EndFrame();
+            if (renderer.IsNeedRecreationSwapchain())
+            {
+                m_PendingSwapchainRecreate = true;
+            }
         }
     }
 
@@ -175,17 +175,17 @@ namespace HALIBUT
     {
         for (const UPtr<Layer>& layer : m_LayerStack)
         {
-            // layer->OnSwapchainRecreated(
-            //     m_RenderContext->GetDevice(),
-            //     m_RenderContext->GetSwapchain(),
-            //     m_RenderContext->GetRenderer()
-            // );
+            layer->OnSwapchainRecreated(
+                m_RenderContext->GetDevice(),
+                m_RenderContext->GetSwapchain(),
+                m_RenderContext->GetRenderer()
+            );
         }
     }
 
     void Application::RecreateSwapchain()
     {
-       //m_RenderContext->RecreateSwapchain();
+        m_RenderContext->RecreateSwapchain();
 
         // if (m_ImGuiEnabled && m_ImGuiContext != nullptr)
         // {
