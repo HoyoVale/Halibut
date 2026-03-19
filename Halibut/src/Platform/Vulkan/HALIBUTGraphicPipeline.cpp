@@ -36,8 +36,8 @@ namespace HALIBUT
 			.depthClampEnable = VK_FALSE, 
 			.rasterizerDiscardEnable = VK_FALSE, 
 			.polygonMode = vk::PolygonMode::eFill, 
-			.cullMode = cullMode, 
-			.frontFace = vk::FrontFace::eCounterClockwise, 
+			.cullMode = cullMode,  // 决定是否需要剔除三角形背面，不去渲染背面朝向视口的三角形
+			.frontFace = vk::FrontFace::eCounterClockwise, // 规定逆时针画三角形是正面
 			.depthBiasEnable = VK_FALSE, 
 			.depthBiasSlopeFactor = 1.0f, 
 			.lineWidth = 1.0f
