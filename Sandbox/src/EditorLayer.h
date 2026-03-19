@@ -16,7 +16,9 @@ public:
     void OnSwapchainRecreated(HALIBUTDevice& device, HALIBUTSwapchain& swapchain, HALIBUTRenderer& renderer) override;
 
 private:
-    HALIBUTRenderer* m_Renderer = nullptr;
-    glm::vec4 m_ClearColor = {0.1f,0.2f,0.3f,1.0f};
+    HALIBUTRenderer* m_Renderer;
+    // TODO ：可能会有很多pipeline
+    UPtr<HALIBUTGraphicPipeline> m_Pipeline = nullptr; 
+    glm::vec4 m_ClearColor = {0.1f,0.1f,0.1f,1.0f};
 };
 }

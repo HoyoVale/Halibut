@@ -24,16 +24,23 @@ void EditorLayer::OnAttach()
     }
     m_Renderer = &app->GetRenderer();
     m_Renderer->SetClearColor(m_ClearColor);
+
+    m_Pipeline = MakeUPtr<HALIBUTGraphicPipeline>(
+        "assets/shaders/triangle.vert.spv",
+        "assets/shaders/triangle.frag.spv",
+        app->GetDevice(),
+        app->GetSwapchain());
 }
 
 void EditorLayer::OnDetach()
 {
-    Application* app = Application::Get();
 }
 
 void EditorLayer::OnUpdate(HALIBUT::Timestep ts)
 {
     m_Renderer->BeginSwapchainPass();
+    m_Renderer->BindPipeline(*m_Pipeline);
+    m_Renderer->Draw(3, 1, 0, 0);
     m_Renderer->EndSwapchainPass();
 }
 
@@ -48,5 +55,15 @@ void EditorLayer::OnSwapchainRecreated(HALIBUTDevice& device, HALIBUTSwapchain& 
     (void)swapchain;
     m_Renderer = &renderer;
     m_Renderer->SetClearColor(m_ClearColor);
+    Application* app = Application::Get();
+    if (app == nullptr)
+    {
+        throw std::runtime_error("EditorLayer requires a valid Application instance");
+    }
+    m_Pipeline = MakeUPtr<HALIBUTGraphicPipeline>(
+        "assets/shaders/triangle.vert.spv",
+        "assets/shaders/triangle.frag.spv",
+        app->GetDevice(),
+        app->GetSwapchain());
 }
 }
