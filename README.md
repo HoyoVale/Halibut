@@ -11,11 +11,15 @@
 ## 目前版本
 
 能够稳定渲染窗口 
-  - `Instance` 创建
-  - `Device` 选取
-  - `Swapchain` 创建
-  - `frame` 帧资源
-  - `randerer` 渲染流程闭环
-  - 实现`swapchian recreation`
-  
-下一步：实现`GraphicPipeline`渲染管线
+  - 1.0.0
+    - `Instance` 创建
+    - `Device` 选取
+    - `Swapchain` 创建
+    - `frame` 帧资源
+    - `randerer` 渲染流程闭环
+    - 实现`swapchian recreation`
+  - 1.0.1
+    - `pipeline`
+    - `slangc` compile `shaders`
+    - `draw a triangle`
+下一步：实现`buffer` 和 `image`
