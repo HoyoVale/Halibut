@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "HALIBUTDevice.h"
 #include "HALIBUTSwapchain.h"
+#include "HALIBUTVertexLayout.h"
 #include <vulkan/vulkan_raii.hpp>
 #include <vector>
 namespace HALIBUT
@@ -14,6 +15,7 @@ namespace HALIBUT
             const std::string& fragmentShaderFileName,
             HALIBUTDevice& device,
             HALIBUTSwapchain& swapchain,
+            const HALIBUTVertexLayout& vertexLayout = HALIBUTVertexLayout{},
             vk::Format depthFormat = vk::Format::eUndefined,
             vk::Format colorAttachmentFormat = vk::Format::eUndefined,
             vk::CullModeFlags cullMode = vk::CullModeFlagBits::eNone

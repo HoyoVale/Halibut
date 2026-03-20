@@ -3,6 +3,7 @@
 #include "HALIBUTDevice.h"
 #include "HALIBUTSwapchain.h"
 #include "HALIBUTFrame.h"
+#include "HALIBUTBuffer.h"
 #include "HALIBUTGraphicPipeline.h"
 
 #include <glm/glm.hpp>
@@ -64,11 +65,14 @@ namespace HALIBUT
             void EndSwapchainPass();
             void SetClearColor(glm::vec4& clearcolor);
             void BindPipeline(HALIBUTGraphicPipeline& pipeline);
+            void BindVertexBuffer(HALIBUTBuffer& buffer, vk::DeviceSize offset = 0, uint32_t binding = 0);
+            void BindIndexBuffer(HALIBUTBuffer& buffer, vk::IndexType indexType = vk::IndexType::eUint32, vk::DeviceSize offset = 0);
             void SetViewport(uint32_t position, vk::Viewport& viewport);
             void SetViewport(uint32_t position, const float& x, const float& y, const float& minDepth, const float& maxDepth);
             void SetScissor(uint32_t position, vk::Rect2D& scissor);
             void SetScissor(uint32_t position, const float& OffsetX, const float& OffsetY);
             void Draw(uint32_t vertexCount,uint32_t instanceCount,uint32_t firstVertex,uint32_t firstInstance);
+            void DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance);
 
             inline bool IsNeedRecreationSwapchain() { return b_NeedRecreationSwapchain; };
             inline vk::raii::CommandBuffer& GetCommandBuffer() { return m_Frames[m_CurrentFrame].GetCommandBuffer(); }

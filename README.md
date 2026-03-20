@@ -18,6 +18,7 @@
     - `frame` 帧资源
     - `randerer` 渲染流程闭环
     - 实现`swapchian recreation`
+    - ![alt text](image.png)
   - 1.0.1
     - `pipeline`
     - `slangc` compile `shaders`

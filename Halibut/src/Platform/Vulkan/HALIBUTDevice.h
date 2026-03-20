@@ -56,7 +56,10 @@ namespace HALIBUT
         }
     };
 
-    struct UploadBufferSlice
+    class HALIBUT_API HALIBUTDevice
+    {
+    public:
+        struct UploadBufferSlice
     {
         vk::Buffer Buffer = vk::Buffer{};
         vk::DeviceSize Offset = 0;
@@ -89,22 +92,29 @@ namespace HALIBUT
     private:
         HALIBUTDevice& m_Device;
     };
-
-    class HALIBUT_API HALIBUTDevice
-    {
-    public:
-
         HALIBUTDevice(HALIBUTInstance& instance, HALIBUTSurface& surface);
         ~HALIBUTDevice();
+
+        // 设备与管线
+        inline vk::raii::PhysicalDevice& GetPhysicalDevice() { return m_PhysicalDevice; }
+        inline vk::raii::Device& GetDevice() { return m_Device; }
+        inline vk::raii::Queue& GetGraphicsQueue() { return m_GraphicsQueue; }
+        inline vk::raii::Queue& GetPresentQueue() { return m_PresentQueue; }
+        inline QueueFamilyIndices& GetQueueFamilyIndices() { return m_QueueFamilyIndices; }
+        // 能力与内存
+        inline const HALIBUTDeviceCapabilityProfile& GetCapabilityProfile() const { return m_CapabilityProfile; }
+        uint32_t FindMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags properties) const;
+        const vk::PhysicalDeviceMemoryProperties& GetMemoryProperties() const { return m_MemoryProperties; };
+        // 管线缓存
+        inline vk::raii::PipelineCache& GetPipelineCache() { return m_PipelineCache; }
+
+        // #===上传辅助===# //
         // 批量上传到 GPU
         void BeginUploadBatch();
         void EndUploadBatch();
         bool IsUploadBatchActive() const { return m_UploadBatchDepth > 0; }
         // 上传 commandbuffer 命令到 GPU
         void ImmediateSubmit(const std::function<void(vk::CommandBuffer)>& recordCommands);
-        // find memory type 用于获取内存中数据的格式信息
-        uint32_t FindMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags properties) const;
-        const vk::PhysicalDeviceMemoryProperties& GetMemoryProperties() const;
         // CopyBuffer 用于设备间传递缓冲区数据
         void CopyBufferImmediate(
             vk::Buffer sourceBuffer, 
@@ -134,13 +144,6 @@ namespace HALIBUT
             vk::DeviceSize size,
             vk::DeviceSize alignment = 16
         );
-        inline QueueFamilyIndices& GetQueueFamilyIndices() { return m_QueueFamilyIndices; }
-        inline vk::raii::PhysicalDevice& GetPhysicalDevice() { return m_PhysicalDevice; }
-        inline vk::raii::Device& GetDevice() { return m_Device; }
-        inline vk::raii::Queue& GetGraphicsQueue() { return m_GraphicsQueue; }
-        inline vk::raii::Queue& GetPresentQueue() { return m_PresentQueue; }
-        inline vk::raii::PipelineCache& GetPipelineCache() { return m_PipelineCache; }
-        inline const HALIBUTDeviceCapabilityProfile& GetCapabilityProfile() const { return m_CapabilityProfile; }
     private:
         // 选择 GPU 
         void PickPhysicalDevice();
@@ -180,6 +183,7 @@ namespace HALIBUT
         vk::raii::Fence                  m_ImmediateSubmitFence = nullptr;
         vk::raii::Buffer                 m_UploadRingBuffer = nullptr;
         vk::raii::DeviceMemory           m_UploadRingMemory = nullptr;
+        vk::PhysicalDeviceMemoryProperties m_MemoryProperties = {};
         void*                            m_UploadRingMappedPtr = nullptr;
         vk::DeviceSize                   m_UploadRingSize = 0;
         vk::DeviceSize                   m_UploadRingHead = 0;

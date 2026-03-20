@@ -355,6 +355,15 @@ namespace HALIBUT
             *pipeline.GetPipeline()
         );
     }
+    void HALIBUTRenderer::BindVertexBuffer(HALIBUTBuffer& buffer, vk::DeviceSize offset, uint32_t binding)
+    {
+        const vk::Buffer rawBuffer = buffer.GetBuffer();
+        GetCommandBuffer().bindVertexBuffers(binding, rawBuffer, offset);
+    }
+    void HALIBUTRenderer::BindIndexBuffer(HALIBUTBuffer& buffer, vk::IndexType indexType, vk::DeviceSize offset)
+    {
+        GetCommandBuffer().bindIndexBuffer(buffer.GetBuffer(), offset, indexType);
+    }
     void HALIBUTRenderer::SetViewport(uint32_t position, vk::Viewport &viewport)
     {
         GetCommandBuffer().setViewport(position, viewport);
@@ -383,6 +392,10 @@ namespace HALIBUT
     void HALIBUTRenderer::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
     {
         GetCommandBuffer().draw(vertexCount, instanceCount, firstVertex, firstInstance);
+    }
+    void HALIBUTRenderer::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
+    {
+        GetCommandBuffer().drawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     }
     ImageTransition HALIBUTRenderer::CreateImageTransition(vk::Image image, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, vk::AccessFlags2 srcAccessMask, vk::AccessFlags2 dstAccessMask, vk::PipelineStageFlags2 srcStageMask, vk::PipelineStageFlags2 dstStageMask, vk::ImageAspectFlags aspectMask)
     {

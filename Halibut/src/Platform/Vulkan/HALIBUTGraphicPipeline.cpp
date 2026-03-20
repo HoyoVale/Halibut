@@ -8,6 +8,7 @@ namespace HALIBUT
         const std::string &fragmentShaderFileName, 
         HALIBUTDevice &device, 
         HALIBUTSwapchain &swapchain, 
+        const HALIBUTVertexLayout& vertexLayout,
         vk::Format depthFormat, 
         vk::Format colorAttachmentFormat, 
         vk::CullModeFlags cullMode
@@ -26,7 +27,35 @@ namespace HALIBUT
 		vk::PipelineShaderStageCreateInfo fragShaderStageInfo{.stage = vk::ShaderStageFlagBits::eFragment, .module = *fragShaderModule, .pName = "main"};
 		vk::PipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
         // 告诉 pipeline 绑定上来的 vertex buffer，里面的数据到底长什么样
-        vk::PipelineVertexInputStateCreateInfo vertexInputInfo{};
+        std::vector<vk::VertexInputBindingDescription> bindingDescriptions;
+        bindingDescriptions.reserve(vertexLayout.GetBindings().size());
+        for (const HALIBUTVertexBindingDesc& binding : vertexLayout.GetBindings())
+        {
+            bindingDescriptions.push_back(vk::VertexInputBindingDescription{
+                .binding = binding.Binding,
+                .stride = binding.Stride,
+                .inputRate = binding.InputRate
+            });
+        }
+
+        std::vector<vk::VertexInputAttributeDescription> attributeDescriptions;
+        attributeDescriptions.reserve(vertexLayout.GetAttributes().size());
+        for (const HALIBUTVertexAttributeDesc& attribute : vertexLayout.GetAttributes())
+        {
+            attributeDescriptions.push_back(vk::VertexInputAttributeDescription{
+                .location = attribute.Location,
+                .binding = attribute.Binding,
+                .format = attribute.Format,
+                .offset = attribute.Offset
+            });
+        }
+
+        vk::PipelineVertexInputStateCreateInfo vertexInputInfo{
+            .vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size()),
+            .pVertexBindingDescriptions = bindingDescriptions.empty() ? nullptr : bindingDescriptions.data(),
+            .vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size()),
+            .pVertexAttributeDescriptions = attributeDescriptions.empty() ? nullptr : attributeDescriptions.data()
+        };
         // 管道输入装配状态，告诉 pipeline 顶点如何组装成图元
         vk::PipelineInputAssemblyStateCreateInfo inputAssembly{.topology = vk::PrimitiveTopology::eTriangleList};
         // 告诉视口和裁剪配置

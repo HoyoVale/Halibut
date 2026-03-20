@@ -131,6 +131,7 @@ namespace HALIBUT
         m_Surface(surface)
     {
         PickPhysicalDevice();
+        m_MemoryProperties = m_PhysicalDevice.getMemoryProperties();
         CreateLogicalDevice();
     }
     HALIBUTDevice::~HALIBUTDevice()
@@ -892,9 +893,8 @@ namespace HALIBUT
 
     uint32_t HALIBUTDevice::FindMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags properties) const
     {
-        const vk::PhysicalDeviceMemoryProperties memoryProperties = m_PhysicalDevice.getMemoryProperties();
         const std::optional<uint32_t> memoryTypeIndex = TryFindMemoryTypeIndex(
-            memoryProperties,
+            m_MemoryProperties,
             typeBits,
             properties
         );
