@@ -772,11 +772,36 @@ namespace HALIBUT
         return slice;
     }
 
+    void HALIBUTDevice::CopyBufferToImageImmediate(vk::Buffer sourceBuffer, vk::DeviceSize sourceOffset, vk::Image destinationImage, vk::ImageLayout destinationImageLayout, const vk::ImageSubresourceLayers &imageSubresourceLayers, vk::Extent3D imageExtent, vk::Offset3D imageOffset)
+    {
+        if (imageExtent.width == 0 || imageExtent.height == 0 || imageExtent.depth == 0)
+        {
+            throw std::runtime_error("CopyBufferToImageImmediate image extent must be non-zero");
+        }
+
+        ImmediateSubmit([&](vk::CommandBuffer commandBuffer) {
+            const vk::BufferImageCopy copyRegion{
+                .bufferOffset = sourceOffset,
+                .bufferRowLength = 0,
+                .bufferImageHeight = 0,
+                .imageSubresource = imageSubresourceLayers,
+                .imageOffset = imageOffset,
+                .imageExtent = imageExtent
+            };
+
+            commandBuffer.copyBufferToImage(
+                sourceBuffer,
+                destinationImage,
+                destinationImageLayout,
+                copyRegion
+            );
+        });
+    }
+
     HALIBUTDevice::UploadBufferSlice HALIBUTDevice::StageUploadData(
-        const void* sourceData,
+        const void *sourceData,
         vk::DeviceSize size,
-        vk::DeviceSize alignment
-    )
+        vk::DeviceSize alignment)
     {
         if (sourceData == nullptr || size == 0)
         {
@@ -865,7 +890,28 @@ namespace HALIBUT
         }
     }
 
+    uint32_t HALIBUTDevice::FindMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags properties) const
+    {
+        const vk::PhysicalDeviceMemoryProperties memoryProperties = m_PhysicalDevice.getMemoryProperties();
+        const std::optional<uint32_t> memoryTypeIndex = TryFindMemoryTypeIndex(
+            memoryProperties,
+            typeBits,
+            properties
+        );
+
+        if (!memoryTypeIndex.has_value())
+        {
+            throw std::runtime_error("failed to find suitable Vulkan memory type");
+        }
+
+        return memoryTypeIndex.value();
+    }
+
     void HALIBUTDevice::CopyBufferImmediate(vk::Buffer sourceBuffer, vk::Buffer destinationBuffer, vk::DeviceSize size)
+    {
+        CopyBufferImmediate(sourceBuffer, 0, destinationBuffer, 0, size);
+    }
+    void HALIBUTDevice::CopyBufferImmediate(vk::Buffer src, vk::DeviceSize srcOffset, vk::Buffer dst, vk::DeviceSize dstOffset, vk::DeviceSize size)
     {
         if (size == 0)
         {
@@ -873,12 +919,12 @@ namespace HALIBUT
         }
 
         ImmediateSubmit([&](vk::CommandBuffer commandBuffer) {
-            vk::BufferCopy copyRegion{
-                .srcOffset = 0,
-                .dstOffset = 0,
+            const vk::BufferCopy copyRegion{
+                .srcOffset = srcOffset,
+                .dstOffset = dstOffset,
                 .size = size
             };
-            commandBuffer.copyBuffer(sourceBuffer, destinationBuffer, copyRegion);
+            commandBuffer.copyBuffer(src, dst, copyRegion);
         });
     }
 }

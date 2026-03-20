@@ -23,7 +23,9 @@ target_sources(Halibut PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Vulkan/HALIBUTFrame.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Vulkan/HALIBUTRenderer.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Vulkan/HALIBUTGraphicPipeline.cpp"
-  
+  "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Vulkan/HALIBUTResourceAllocator.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Vulkan/HALIBUTBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Vulkan/HALIBUTImage.cpp"
   # src/Platform/Windows
   $<$<PLATFORM_ID:Windows>:
   "${CMAKE_CURRENT_LIST_DIR}/src/Platform/Windows/WindowsInput.cpp"
